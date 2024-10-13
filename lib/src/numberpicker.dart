@@ -17,6 +17,9 @@ class NumberPicker extends StatefulWidget {
   /// Called when selected value changes
   final ValueChanged<int> onChanged;
 
+  /// Called when user stops dragging
+  final VoidCallback? onStop;
+
   /// Specifies how many items should be shown - defaults to 3
   final int itemCount;
 
@@ -62,6 +65,7 @@ class NumberPicker extends StatefulWidget {
     required this.maxValue,
     required this.value,
     required this.onChanged,
+    this.onStop,
     this.itemCount = 3,
     this.step = 1,
     this.itemHeight = 50,
@@ -158,6 +162,7 @@ class _NumberPickerState extends State<NumberPicker> {
       child: NotificationListener<ScrollEndNotification>(
         onNotification: (not) {
           if (not.dragDetails?.primaryVelocity == 0) {
+            widget.onStop?.call();
             Future.microtask(() => _maybeCenterValue());
           }
           return true;
